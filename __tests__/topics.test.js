@@ -34,4 +34,8 @@ describe("GET:/api/topics", () => {
                 
             })
     })
+     test("GET 404: returns an 404 status when sent a request for a incorrect api", () => {
+        return request(app).get("/api/notapath").expect(404)
+        
+     })
 })
