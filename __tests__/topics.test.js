@@ -13,16 +13,8 @@ afterAll(() => {
 })
 
 describe("GET:/api/topics", () => {
-    test("GET 200: returns a 200 status code", () => {
-        return request(app).get("/api/topics").expect(200)
-    })
-    test("GET 200: Returns a response containing an array on the body", () =>{
-        return request(app).get("/api/topics").expect(200).then((response) =>{
-            const {topics} = response.body
-            expect(Array.isArray(topics)).toBe(true)
-    
-        })
-    })
+   
+   
     test("GET 200: Returns an array containing expected objects for each item in table", () =>{
             return request(app).get("/api/topics").expect(200).then((response)=>{
                 const {topics} = response.body
