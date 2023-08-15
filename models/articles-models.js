@@ -19,6 +19,7 @@ exports.readArticles = () => {
     ON articles.article_id = comments.article_id
     GROUP BY articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url
     ORDER BY articles.created_at;`).then(({rows}) =>{
+        
         return rows
     })
 }
