@@ -29,7 +29,7 @@ describe("GET:/api/topics", () => {
      
 })
 
-describe.only("GET:/api/articles/:article_id", () =>{
+describe("GET:/api/articles/:article_id", () =>{
     test("Get 200: returns an article object corresponding to the inputted id", () =>{
         return request(app).get("/api/articles/1").expect(200).then((response) => {
             const article = response.body
@@ -46,6 +46,19 @@ describe.only("GET:/api/articles/:article_id", () =>{
 
         })
     })
+    test("GET 404: returns 404 status code and message when given a valid id that is not in the database", () =>{
+        return request(app).get("/api/articles/999999").expect(404).then(({body}) =>{
+            const {msg} = body
+            expect(msg).toBe("not found")
+
+        })
+    })
+    test("sends a 400 status code and a correct error msg when the inputted id parameter is not a valid type", () =>{
+        return request(app).get("/api/articles/word").expect(400).then(({body}) =>{
+            const {msg} = body
+            expect(msg).toBe("bad request")
+        })
+    })
 })
 
 describe("GET 404: not an api path", () => {
@@ -55,4 +68,8 @@ describe("GET 404: not an api path", () => {
         const {msg} = body
         expect(msg).toBe("not found")
     })
-})})
+    
+})
+    
+
+})

@@ -1,5 +1,6 @@
 const express = require("express");
 const {getTopics}= require("./controllers/topic-controllers")
+const {handleCustomErrors, handleErrors} = require("./error.handlers")
 const {getArticleById} = require("./controllers/articles-controllers")
 const app = express();
 
@@ -13,6 +14,9 @@ app.use((req, res) => {
     res.status(404).send({msg: "not found"})
 })
 
+app.use(handleCustomErrors)
+
+app.use(handleErrors)
 
 module.exports = app
 
