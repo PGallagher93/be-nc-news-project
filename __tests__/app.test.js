@@ -81,7 +81,7 @@ describe("GET:/api/articles/:article_id", () => {
   });
 });
 
-describe.only("GET 200: /api/articles", () =>{
+describe("GET 200: /api/articles", () =>{
   test("returns the correct array of article objects with a comment count and ordered by date desc", () =>{
 
     return request(app).get("/api/articles").expect(200).then(({body}) =>{
