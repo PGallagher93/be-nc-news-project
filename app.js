@@ -11,6 +11,8 @@ app.get('/api', getEndpoints)
 app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles', getAllArticles)
 
+app.post('/api/articles/:article_id/comments')
+
 app.use((req, res) => {
     res.status(404).send({msg: "not found"})
 })
