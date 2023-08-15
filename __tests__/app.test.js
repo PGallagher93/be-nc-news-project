@@ -82,10 +82,11 @@ describe("GET:/api/articles/:article_id", () => {
   });
 });
 
-describe.only("GET:/api/articles/:article_id/comments", ()=>{
+describe("GET:/api/articles/:article_id/comments", ()=>{
   test("Get 200: returns an array of comments for the given article_id",()=>{
     return request(app).get("/api/articles/3/comments").expect(200).then((response) => {
       const comments = response.body
+      
       expect(comments).toHaveLength(2)
       expect(comments).toBeSortedBy("created_at", {descending:true})
       comments.forEach((comment) => {
@@ -99,13 +100,18 @@ describe.only("GET:/api/articles/:article_id/comments", ()=>{
       })
     })
   } )
+  test("GET 200: response with a status code 200 and an empty array if the id is valid but no comments exist for it", ()=>{
+    return request(app).get("/api/articles/4/comments").expect(200).then(({body}) =>{
+      expect(body).toEqual([])
+    })
+  })
   test("GET 400: returns status code 400 and bad request message if sent an invalid id input", ()=>{
     return request(app).get("/api/articles/hello/comments").expect(400).then(({ body }) => {
       const { msg } = body;
       expect(msg).toBe("bad request");
     });
   })
-  test.only("GET 404: returns a 404 code when a correct id is inputted but theres no item matching in the database", () =>{
+  test("GET 404: returns a 404 code when a correct id is inputted but theres no item matching in the database", () =>{
     return request(app)
     .get("/api/articles/999999/comments")
     .expect(404)
