@@ -81,6 +81,26 @@ describe("GET:/api/articles/:article_id", () => {
   });
 });
 
+describe.only("GET:/api/articles/:article_id/comments", ()=>{
+  test("Get 200: returns an array of comments for the given article_id",()=>{
+    return request(app).get("/api/articles/3/comments").expect(200).then((response) => {
+      const comments = response.body
+      expect(comments).toHaveLength(2)
+      expect(comments).toBeSortedBy("created_at", {descending:true})
+      comments.forEach((comment) => {
+        expect(comment).toHaveProperty("comment_id");
+        expect(comment).toHaveProperty("votes");
+        expect(comment).toHaveProperty("created_at");
+        expect(comment).toHaveProperty("author");
+        expect(comment).toHaveProperty("body");
+        expect(comment).toHaveProperty("article_id")
+
+      })
+    })
+  } )
+}
+)
+
 describe("GET 200: /api/articles", () =>{
   test("returns the correct array of article objects with a comment count and ordered by date desc", () =>{
 
