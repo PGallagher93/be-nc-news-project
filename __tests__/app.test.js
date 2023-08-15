@@ -60,6 +60,7 @@ describe("GET:/api/articles/:article_id", () => {
         expect(article).toHaveProperty("article_img_url");
         expect(article.article_id).toBe(1);
       });
+    
   });
   test("GET 404: returns 404 status code and message when given a valid id that is not in the database", () => {
     return request(app)
@@ -80,6 +81,49 @@ describe("GET:/api/articles/:article_id", () => {
       });
   });
 });
+
+describe("GET:/api/articles/:article_id/comments", ()=>{
+  test.only("Get 200: returns an array of comments for the given article_id",()=>{
+    return request(app).get("/api/articles/3/comments").expect(200).then((response) => {
+      const comments = response.body
+      
+      expect(comments).toHaveLength(2)
+      expect(comments).toBeSortedBy("created_at", {descending:true})
+      comments.forEach((comment) => {
+        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+        expect(comment).toHaveProperty("votes", expect.any(Number));
+        expect(comment).toHaveProperty("author", expect.any(String));
+        expect(comment).toHaveProperty("body", expect.any(String))
+        expect(comment).toHaveProperty("created_at", expect.any(String));
+        expect(comment).toHaveProperty("article_id", expect.any(Number))
+        expect(comment.article_id).toBe(3)
+
+      })
+    })
+  } )
+  test("GET 200: response with a status code 200 and an empty array if the id is valid but no comments exist for it", ()=>{
+    return request(app).get("/api/articles/4/comments").expect(200).then(({body}) =>{
+      expect(body).toEqual([])
+    })
+  })
+  test("GET 400: returns status code 400 and bad request message if sent an invalid id input", ()=>{
+    return request(app).get("/api/articles/hello/comments").expect(400).then(({ body }) => {
+      const { msg } = body;
+      expect(msg).toBe("bad request");
+    });
+  })
+  test("GET 404: returns a 404 code when a correct id is inputted but theres no item matching in the database", () =>{
+    return request(app)
+    .get("/api/articles/999999/comments")
+    .expect(404)
+    .then(({ body }) => {
+      const { msg } = body;
+     
+      expect(msg).toBe("not found");
+    });
+  })
+}
+)
 
 describe("GET 200: /api/articles", () =>{
   test("returns the correct array of article objects with a comment count and ordered by date desc", () =>{
