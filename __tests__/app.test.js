@@ -83,7 +83,7 @@ describe("GET:/api/articles/:article_id", () => {
 });
 
 describe("GET:/api/articles/:article_id/comments", ()=>{
-  test.only("Get 200: returns an array of comments for the given article_id",()=>{
+  test("Get 200: returns an array of comments for the given article_id",()=>{
     return request(app).get("/api/articles/3/comments").expect(200).then((response) => {
       const comments = response.body
       
@@ -149,6 +149,78 @@ describe("GET 200: /api/articles", () =>{
   
 })
 
+describe("POST 201: /api/articles/:article_id/comments", ()=>{
+  test("sends a 201 status and returns the posted comment after successfully inserting comment", () =>{
+    const comment = {username: "butter_bridge", body:"this is a comment"}
+    
+    return request(app).post("/api/articles/4/comments").send(comment).expect(201).then((response) =>{
+      const comments = response.body
+      expect(comments[0]).toHaveProperty("comment_id", expect.any(Number));
+        expect(comments[0]).toHaveProperty("votes", expect.any(Number));
+        expect(comments[0]).toHaveProperty("author", expect.any(String));
+        expect(comments[0]).toHaveProperty("body", expect.any(String))
+        expect(comments[0]).toHaveProperty("created_at", expect.any(String));
+        expect(comments[0]).toHaveProperty("article_id", expect.any(Number))
+      expect(comments[0].body).toBe("this is a comment")
+      expect(comments[0].author).toBe("butter_bridge")
+
+      return request(app).get("/api/articles/4/comments")
+    }).then((response)=>{
+      const comments = response.body
+      expect(comments[0]).toHaveProperty("comment_id", expect.any(Number));
+        expect(comments[0]).toHaveProperty("votes", expect.any(Number));
+        expect(comments[0]).toHaveProperty("author", expect.any(String));
+        expect(comments[0]).toHaveProperty("body", expect.any(String))
+        expect(comments[0]).toHaveProperty("created_at", expect.any(String));
+        expect(comments[0]).toHaveProperty("article_id", expect.any(Number))
+      expect(comments[0].body).toBe("this is a comment")
+      expect(comments[0].author).toBe("butter_bridge")
+    })
+  })
+  test("POST 400: returns status code 400 and bad request message if sent an invalid id input", ()=>{
+    const comment = {username: "butter_bridge", body:"this is a comment"}
+    
+    return request(app).post("/api/articles/hello/comments").expect(400).send(comment).then(({ body }) => {
+      const { msg } = body;
+      expect(msg).toBe("bad request");
+    });
+  })
+  test("POST 404: returns a 404 code when a correct id is inputted but theres no item matching in the database", () =>{
+    
+    const comment = {username: "butter_bridge", body:"this is a comment"}
+    return request(app)
+    .post("/api/articles/999999/comments")
+    .expect(404)
+    .send(comment)
+    .then(({ body }) => {
+      const { msg } = body;
+     
+      expect(msg).toBe("not found");
+    });
+  })
+
+  test("POST 400:returns status code 400 and a bad request message if no comment is sent", () =>{
+    return request(app).post("/api/articles/4/comments").expect(400).then(({ body }) => {
+      const { msg } = body;
+      expect(msg).toBe("bad request");
+    });
+
+  })
+  test("POST 404: returns status code 404 and a not found message when a comment is inserting with an unknown user name", () =>{
+    const comment = {username: "person1", body:"this is a comment"}
+    return request(app)
+    .post("/api/articles/999999/comments")
+    .expect(404)
+    .send(comment)
+    .then(({ body }) => {
+      const { msg } = body;
+     
+      expect(msg).toBe("not found");
+    });
+  })
+  
+})
+
 describe("GET 404: not an api path", () => {
   test("sends a 404 status code and err msg when the inputted api path does not exist", () => {
     return request(app)
@@ -159,5 +231,6 @@ describe("GET 404: not an api path", () => {
         expect(msg).toBe("not found");
       });
   });
+  
 });
 
