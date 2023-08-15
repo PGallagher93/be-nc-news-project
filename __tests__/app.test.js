@@ -60,6 +60,7 @@ describe("GET:/api/articles/:article_id", () => {
         expect(article).toHaveProperty("article_img_url");
         expect(article.article_id).toBe(1);
       });
+    
   });
   test("GET 404: returns 404 status code and message when given a valid id that is not in the database", () => {
     return request(app)
@@ -98,6 +99,22 @@ describe.only("GET:/api/articles/:article_id/comments", ()=>{
       })
     })
   } )
+  test("GET 400: returns status code 400 and bad request message if sent an invalid id input", ()=>{
+    return request(app).get("/api/articles/hello/comments").expect(400).then(({ body }) => {
+      const { msg } = body;
+      expect(msg).toBe("bad request");
+    });
+  })
+  test.only("GET 404: returns a 404 code when a correct id is inputted but theres no item matching in the database", () =>{
+    return request(app)
+    .get("/api/articles/999999/comments")
+    .expect(404)
+    .then(({ body }) => {
+      const { msg } = body;
+     
+      expect(msg).toBe("not found");
+    });
+  })
 }
 )
 
