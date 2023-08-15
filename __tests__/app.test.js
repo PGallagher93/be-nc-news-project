@@ -28,3 +28,12 @@ describe("GET:/api/topics", () => {
     })
      
 })
+
+describe("GET 404: not an api path", () => {
+    
+    test("sends a 404 status code and err msg when the inputted api path does not exist", () =>{
+    return request(app).get("/api/notapath").expect(404).then(({body}) =>{
+        const {msg} = body
+        expect(msg).toBe("not found")
+    })
+})})
