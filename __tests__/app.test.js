@@ -87,7 +87,7 @@ describe("GET 200: /api/articles", () =>{
     return request(app).get("/api/articles").expect(200).then(({body}) =>{
       const articles = body
       expect(articles).toHaveLength(13)
-      expect(articles).toBeSortedBy("created_at")
+      expect(articles).toBeSortedBy("created_at", {descending:true})
       articles.forEach((article) =>{
         expect(article).toHaveProperty("author");
         expect(article).toHaveProperty("title");
