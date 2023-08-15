@@ -81,6 +81,30 @@ describe("GET:/api/articles/:article_id", () => {
   });
 });
 
+describe("GET 200: /api/articles", () =>{
+  test("returns the correct array of article objects with a comment count and ordered by date desc", () =>{
+
+    return request(app).get("/api/articles").expect(200).then(({body}) =>{
+      const articles = body
+      expect(articles).toHaveLength(13)
+      expect(articles).toBeSortedBy("created_at", {descending:true})
+      articles.forEach((article) =>{
+        expect(article).toHaveProperty("author");
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("article_id");
+        expect(article).toHaveProperty("topic");
+        
+        expect(article).toHaveProperty("created_at");
+        expect(article).toHaveProperty("votes");
+        expect(article).toHaveProperty("article_img_url")
+        expect(article).toHaveProperty("comment_count")
+        expect(article).not.toHaveProperty("body")
+      })
+    })
+  })
+  
+})
+
 describe("GET 404: not an api path", () => {
   test("sends a 404 status code and err msg when the inputted api path does not exist", () => {
     return request(app)
