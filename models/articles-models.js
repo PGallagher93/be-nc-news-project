@@ -32,3 +32,18 @@ exports.findCommentsByArticleId = (id) => {
     return rows
   });
 };
+
+exports.insertComment = ({username, body}, id) => {
+  let date = new Date();
+  
+  return db.query(`
+  INSERT INTO comments
+  (votes, created_at, author, body, article_id)
+  VALUES
+  (0, $1, $2, $3, $4)
+  RETURNING *
+  `, [date, username, body, id]).then(({rows})=>{
+    return rows
+  })
+   
+}
