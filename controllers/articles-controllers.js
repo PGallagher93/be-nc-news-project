@@ -39,6 +39,6 @@ exports.postComment = (req, res, next) => {
    
   Promise.all(promises).then((resolvedPromises) =>{
     
-    res.status(201).send(resolvedPromises[1])
+    res.status(201).send({comment: resolvedPromises[1]})
   }).catch(next)
 }

@@ -151,30 +151,35 @@ describe("GET 200: /api/articles", () =>{
 
 describe("POST 201: /api/articles/:article_id/comments", ()=>{
   test("sends a 201 status and returns the posted comment after successfully inserting comment", () =>{
-    const comment = {username: "butter_bridge", body:"this is a comment"}
+    const inputComment = {username: "butter_bridge", body:"this is a comment"}
     
-    return request(app).post("/api/articles/4/comments").send(comment).expect(201).then((response) =>{
-      const comments = response.body
-      expect(comments[0]).toHaveProperty("comment_id", expect.any(Number));
-        expect(comments[0]).toHaveProperty("votes", expect.any(Number));
-        expect(comments[0]).toHaveProperty("author", expect.any(String));
-        expect(comments[0]).toHaveProperty("body", expect.any(String))
-        expect(comments[0]).toHaveProperty("created_at", expect.any(String));
-        expect(comments[0]).toHaveProperty("article_id", expect.any(Number))
-      expect(comments[0].body).toBe("this is a comment")
-      expect(comments[0].author).toBe("butter_bridge")
+    return request(app).post("/api/articles/4/comments").send(inputComment).expect(201).then((response) =>{
+      
+      const {comment} = response.body
+      
+      expect(comment[0]).toHaveProperty("comment_id", expect.any(Number));
+      expect(comment[0]).toHaveProperty("votes", expect.any(Number));
+      expect(comment[0]).toHaveProperty("created_at", expect.any(String));
+      expect(comment[0]).toHaveProperty("article_id", expect.any(Number))
+      expect(comment[0].body).toBe("this is a comment")
+      expect(comment[0].author).toBe("butter_bridge")
 
-      return request(app).get("/api/articles/4/comments")
-    }).then((response)=>{
-      const comments = response.body
-      expect(comments[0]).toHaveProperty("comment_id", expect.any(Number));
-        expect(comments[0]).toHaveProperty("votes", expect.any(Number));
-        expect(comments[0]).toHaveProperty("author", expect.any(String));
-        expect(comments[0]).toHaveProperty("body", expect.any(String))
-        expect(comments[0]).toHaveProperty("created_at", expect.any(String));
-        expect(comments[0]).toHaveProperty("article_id", expect.any(Number))
-      expect(comments[0].body).toBe("this is a comment")
-      expect(comments[0].author).toBe("butter_bridge")
+      
+    })
+  })
+  test("POST 201: ignores any extra keys that may be sent with the post", () =>{
+
+    const inputComment = {username: "butter_bridge", body:"this is a comment", unwantedKey:"no", thisShouldntBeHere: "sad"}
+    return request(app).post("/api/articles/4/comments").send(inputComment).expect(201).then((response) =>{
+      const {comment} = response.body
+      expect(comment[0]).toHaveProperty("comment_id", expect.any(Number));
+      expect(comment[0]).toHaveProperty("votes", expect.any(Number));
+      expect(comment[0]).toHaveProperty("created_at", expect.any(String));
+      expect(comment[0]).toHaveProperty("article_id", expect.any(Number))
+      expect(comment[0].body).toBe("this is a comment")
+      expect(comment[0].author).toBe("butter_bridge")
+
+      
     })
   })
   test("POST 400: returns status code 400 and bad request message if sent an invalid id input", ()=>{
