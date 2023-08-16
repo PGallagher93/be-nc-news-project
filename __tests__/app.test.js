@@ -226,11 +226,23 @@ describe("POST 201: /api/articles/:article_id/comments", ()=>{
   
 })
 
-// describe.only("DELETE 204: /api/comments/:comment_id", ()=>{
-//   test("DELETE 204: deletes the selected comment and returns 204 status code", () =>{
-//     return request(app).delete("/api/comments/1").expect(204)
-//   })
-// })
+describe("DELETE 204: /api/comments/:comment_id", ()=>{
+  test("DELETE 204: deletes the selected comment and returns 204 status code", () =>{
+    return request(app).delete("/api/comments/1").expect(204)
+  })
+  test("DELETE 404: returns a 404 status code and err msg when the inputted API path does not exist", ()=>{
+    return request(app).delete("/api/comments/99999").expect(404).then(({body}) =>{
+      const {msg} = body
+      expect(msg).toBe("not found")
+    })
+  })
+  test("DELETE 400: returns a 400 status code and a bad request message if passed an invalid id type", () => {
+    return request(app).delete("/api/comments/notanid").expect(400).then(({body}) =>{
+      const {msg} = body
+      expect(msg).toBe("bad request")
+    })
+  })
+})
 
 
 describe("GET 404: not an api path", () => {
