@@ -1,7 +1,7 @@
 const express = require("express");
 const {getTopics}= require("./controllers/topic-controllers")
 const {handleCustomErrors, handleErrors} = require("./error-handlers")
-const {getArticleById, getAllArticles, getCommentsByArticleId} = require("./controllers/articles-controllers")
+const {getArticleById, getAllArticles, getCommentsByArticleId, patchVotes} = require("./controllers/articles-controllers")
 const {getEndpoints} = require("./controllers/api-controller")
 const app = express();
 
@@ -11,7 +11,7 @@ app.get('/api', getEndpoints)
 app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles', getAllArticles)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
-
+app.patch('/api/articles/:article_id', patchVotes)
 app.post('/api/articles/:article_id/comments')
 
 app.use((req, res) => {
