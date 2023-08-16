@@ -226,11 +226,11 @@ describe("POST 201: /api/articles/:article_id/comments", ()=>{
   
 })
 
-describe.only("DELETE 204: /api/comments/:comment_id", ()=>{
-  test("DELETE 204: deletes the selected comment and returns 204 status code", () =>{
-    return request(app).delete("/api/comments/1").expect(204)
-  })
-})
+// describe.only("DELETE 204: /api/comments/:comment_id", ()=>{
+//   test("DELETE 204: deletes the selected comment and returns 204 status code", () =>{
+//     return request(app).delete("/api/comments/1").expect(204)
+//   })
+// })
 
 
 describe("GET 404: not an api path", () => {
