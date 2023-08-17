@@ -327,6 +327,20 @@ describe("PATCH 200: /api/articles/:article_id", () =>{
 
 })
 
+describe("GET 200: /api/users", ()=>{
+  test.only("returns an array of user objects and a status code of 200", () =>{
+    return request(app).get("/api/users").expect(200).then(({body})=>{
+      const users = body
+      expect(users).toHaveLength(4)
+      users.forEach((user)=>{
+        expect(user).toHaveProperty("username", expect.any(String));
+        expect(user).toHaveProperty("name", expect.any(String));
+        expect(user).toHaveProperty("avatar_url", expect.any(String));
+      })
+    })
+  })
+})
+
 
 describe("GET 404: not an api path", () => {
   test("sends a 404 status code and err msg when the inputted api path does not exist", () => {

@@ -111,6 +111,17 @@
       "article_img_url": "img url",
       "comment_count": 1
    }
+  },
+  "GET /api/users": {
+    "description": "returns an array of user objects",
+    "queries": [],
+    "exampleResponse":  [
+      {
+        "username": "user1",
+        "name": "a name",
+        "avatar_url": "avatar url"
+      }
+    ]
   }
   
 }
