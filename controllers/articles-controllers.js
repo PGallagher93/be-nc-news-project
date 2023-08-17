@@ -1,4 +1,4 @@
-const { findArticleById, readArticles, findCommentsByArticleId, insertComment } = require("../models/articles-models");
+const { findArticleById, readArticles, findCommentsByArticleId, insertComment, updateVotes } = require("../models/articles-models");
 const{checkIdExists}= require("../models/check-id-models")
 
 exports.getArticleById = (req, res, next) => {
@@ -40,5 +40,17 @@ exports.postComment = (req, res, next) => {
   Promise.all(promises).then((resolvedPromises) =>{
     
     res.status(201).send({comment: resolvedPromises[1]})
+  }).catch(next)
+}
+
+exports.patchVotes = (req, res, next) => {
+  const {article_id} = req.params
+  const votes = req.body
+  
+  const promises= [checkIdExists(article_id), updateVotes(votes, article_id)]
+
+  Promise.all(promises).then((resolvedPromises) => {
+    
+    res.status(200).send({article: resolvedPromises[1]})
   }).catch(next)
 }

@@ -226,6 +226,7 @@ describe("POST 201: /api/articles/:article_id/comments", ()=>{
   
 })
 
+
 describe("DELETE 204: /api/comments/:comment_id", ()=>{
   test("DELETE 204: deletes the selected comment and returns 204 status code", () =>{
     return request(app).delete("/api/comments/1").expect(204).then(({body})=>{
@@ -240,12 +241,96 @@ describe("DELETE 204: /api/comments/:comment_id", ()=>{
   })
   test("DELETE 400: returns a 400 status code and a bad request message if passed an invalid id type", () => {
     return request(app).delete("/api/comments/notanid").expect(400).then(({body}) =>{
-      const {msg} = body
+        const {msg} = body
       expect(msg).toBe("bad request")
     })
   })
 })
+      
+      
+      
+describe("PATCH 200: /api/articles/:article_id", () =>{
+  test("patch 200: returns 200 status code and the updated article when sent correct input", ()=>{
+    
+    const inputVotes = {inc_votes: 1}
+    return request(app).patch("/api/articles/1").send(inputVotes).expect(200).then((response) =>{
+      const {article} = response.body
+      expect(article[0].article_id).toBe(1)
+      expect(article[0].votes).toBe(101)
+      expect(article[0]).toHaveProperty("title", expect.any(String))
+      expect(article[0]).toHaveProperty("topic", expect.any(String))
+      expect(article[0]).toHaveProperty("author", expect.any(String))
+      expect(article[0]).toHaveProperty("body", expect.any(String))
+      expect(article[0]).toHaveProperty("created_at", expect.any(String))
+      expect(article[0]).toHaveProperty("article_img_url", expect.any(String))
+    })
+  })
+  test("patch 200: returns 200 status code and the updated article when sent correct input with a negative number", ()=>{
+    
+    const inputVotes = {inc_votes: -1}
+    return request(app).patch("/api/articles/2").send(inputVotes).expect(200).then((response) =>{
+      const {article} = response.body
+      expect(article[0].article_id).toBe(2)
+      expect(article[0].votes).toBe(-1)
+      expect(article[0]).toHaveProperty("title", expect.any(String))
+      expect(article[0]).toHaveProperty("topic", expect.any(String))
+      expect(article[0]).toHaveProperty("author", expect.any(String))
+      expect(article[0]).toHaveProperty("body", expect.any(String))
+      expect(article[0]).toHaveProperty("created_at", expect.any(String))
+      expect(article[0]).toHaveProperty("article_img_url", expect.any(String))
+    })
+  })
+  test("patch 200: returns 200 status code and the updated article when sent input with extra keys", ()=>{
+    
+    const inputVotes = {inc_votes: 1, helloThere:"general Kenobi"}
+    return request(app).patch("/api/articles/1").send(inputVotes).expect(200).then((response) =>{
+      const {article} = response.body
+      expect(article[0].article_id).toBe(1)
+      expect(article[0].votes).toBe(101)
+      expect(article[0]).toHaveProperty("title", expect.any(String))
+      expect(article[0]).toHaveProperty("topic", expect.any(String))
+      expect(article[0]).toHaveProperty("author", expect.any(String))
+      expect(article[0]).toHaveProperty("body", expect.any(String))
+      expect(article[0]).toHaveProperty("created_at", expect.any(String))
+      expect(article[0]).toHaveProperty("article_img_url", expect.any(String))
+    })
+  })
 
+  test("PATCH 400: returns status code 400 and a bad request message if sent an invalid id type", () =>{
+    const inputVotes = {inc_votes: 1}
+    return request(app).patch("/api/articles/notanid").send(inputVotes).expect(400).then(({body}) =>{
+      const {msg} = body
+      expect(msg).toBe("bad request")
+    })
+  })
+  test("Patch 404: returns a 404 code when a correct id is inputted but theres no item matching in the database", () =>{
+    
+    const inputVotes = {inc_votes: 1}
+    return request(app)
+    .patch("/api/articles/999999")
+    .expect(404)
+    .send(inputVotes)
+    .then(({ body }) => {
+      const { msg } = body;
+     
+      expect(msg).toBe("not found");
+    });
+  })
+  test("PATCH 400: returns a 400 code and a bad request message when a wrong data type is inputted", () =>{
+    const inputVotes = {inc_votes: "string"}
+    return request(app).patch("/api/articles/1").send(inputVotes).expect(400).then(({body})=>{
+
+      const {msg} = body
+      expect(msg).toBe("bad request")
+    })
+  })
+
+})
+
+
+
+  
+})
 
 describe("GET 404: not an api path", () => {
   test("sends a 404 status code and err msg when the inputted api path does not exist", () => {
