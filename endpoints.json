@@ -46,7 +46,7 @@
   "GET /api/articles/": {
     "description": "returns an array of article objects with a comment count sorted by date in desc order",
     "queries": [],
-    "exampleResponse": {
+    "exampleResponse":{"articles" : [{
       
           "article_id": 1,
           "title": "Seafood substitutions are increasing",
@@ -59,12 +59,12 @@
           "comment_count": 1
         
       
-    }
+    }]}
   },
   "GET /api/articles/:article_id/comments": {
     "description": "returns an array of article objects with a comment count sorted by date in desc order",
     "queries": [],
-    "exampleResponse":  [
+    "exampleResponse": {"comments" : [
       {
         "comment_id": 19,
         "body": "'this is a comment'",
@@ -73,20 +73,20 @@
         "votes": 0,
         "created_at": "2023-08-15T19:21:03.619Z"
       }
-    ]
+    ]}
   },
   "POST /api/articles/:article_id/comments": {
     "description": "posts a new comment to the article matching the inputted article id and returns the added comment object",
     "queries": [],
     "ExampleRequestBody": {"username":"string","body":"string"},
-    "exampleResponse":  {
+    "exampleResponse":  {"comment" :{
       "comment_id": 19,
       "body": "'this is a comment'",
       "article_id": 4,
       "author": "'butter_bridge'",
       "votes": 0,
       "created_at": "2023-08-15T19:21:03.619Z"
-    }
+    }}
   },
 
   "DELETE /api/comments/:comment_id": {
@@ -99,7 +99,7 @@
     "description": "posts a new comment to the article matching the inputted article id and returns the added comment object",
     "queries": [],
     "exampleRequestBody": {"inc_votes":"number"},
-    "exampleResponse":  {
+    "exampleResponse":  {"article" : {
       
       "article_id": 1,
       "title": "Seafood substitutions are increasing",
@@ -110,18 +110,18 @@
       "votes": 0,
       "article_img_url": "img url",
       "comment_count": 1
-   }
+   }}
   },
   "GET /api/users": {
     "description": "returns an array of user objects",
     "queries": [],
-    "exampleResponse":  [
+    "exampleResponse": { "users": [
       {
         "username": "user1",
         "name": "a name",
         "avatar_url": "avatar url"
       }
-    ]
+    ]}
   }
   
 }

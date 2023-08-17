@@ -4,6 +4,6 @@ const {readUsers} = require("../models/users-models")
 
 exports.getAllUsers = (req, res, next) =>{
     readUsers().then((users) =>{
-        res.status(200).send(users)
+        res.status(200).send({users: users})
     }).catch(next)
 }
