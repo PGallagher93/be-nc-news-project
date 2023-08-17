@@ -143,11 +143,19 @@ describe("GET 200: /api/articles", () =>{
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url")
-        expect(article).toHaveProperty("comment_count")
+        
         expect(article).not.toHaveProperty("body")
       })
     })
   })
+  test("The returning article objects have a key of comment_count", () =>{
+    return request(app).get("/api/articles").expect(200).then(({body}) =>{
+      const {articles} = body
+      
+      articles.forEach((article) => {
+        expect(article).toHaveProperty("comment_count")
+      })
+  })})
   
 })
 
