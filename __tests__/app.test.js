@@ -332,7 +332,7 @@ describe("GET 200: /api/users", ()=>{
   test("returns an array of user objects and a status code of 200", () =>{
     return request(app).get("/api/users").expect(200).then(({body})=>{
       const {users} = body
-      console.log(users)
+      
       expect(users).toHaveLength(4)
       users.forEach((user)=>{
 
@@ -341,6 +341,12 @@ describe("GET 200: /api/users", ()=>{
         expect(user).toHaveProperty("avatar_url", expect.any(String));
       })
     })
+  })
+})
+
+describe.only("get 200: /api/articles query by topic", () =>{
+  test("get 200: returns only the articles with the topic from the query", ()=>{
+    return request(app).get("/api/articles?topic=mitch").expect(200)
   })
 })
 

@@ -11,6 +11,8 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
+  const{topic} = req.query
+  console.log(topic)
   readArticles().then((articles)=>{
    res.status(200).send({articles : articles})
   })
