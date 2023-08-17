@@ -328,10 +328,6 @@ describe("PATCH 200: /api/articles/:article_id", () =>{
 })
 
 
-
-  
-})
-
 describe("GET 404: not an api path", () => {
   test("sends a 404 status code and err msg when the inputted api path does not exist", () => {
     return request(app)
