@@ -1,5 +1,6 @@
 const { findArticleById, readArticles, findCommentsByArticleId, insertComment, updateVotes } = require("../models/articles-models");
 const{checkIdExists}= require("../models/check-id-models")
+const {checkTopicExists} = require("../models/check-topic-models.js")
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
@@ -12,10 +13,19 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getAllArticles = (req, res, next) => {
   const{topic} = req.query
+  const promises = [readArticles(topic)]
   
-  readArticles(topic).then((articles)=>{
-   res.status(200).send({articles : articles})
-  })
+  if(topic){
+    
+    promises.push(checkTopicExists(topic))
+  }
+  Promise.all(promises).then((resolvedPromises) => {
+    if(!resolvedPromises[0].length){
+      return next({status: 404, msg: "not found"})
+    }
+    const articles = resolvedPromises[0]
+    res.status(200).send({articles: articles})
+  }).catch(next)
 }
 
 exports.getCommentsByArticleId = (req, res, next) =>{

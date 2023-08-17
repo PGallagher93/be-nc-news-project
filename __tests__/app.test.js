@@ -345,7 +345,7 @@ describe("GET 200: /api/users", ()=>{
 })
 
 describe("get 200: /api/articles query by topic", () =>{
-  test.only("get 200: returns only the articles with the topic from the query", ()=>{
+  test("get 200: returns only the articles with the topic from the query", ()=>{
     return request(app).get("/api/articles?topic=mitch").expect(200).then(({body})=>{
       const {articles} =body
       expect(articles).toHaveLength(12)
@@ -361,6 +361,15 @@ describe("get 200: /api/articles query by topic", () =>{
 
       })
     })
+  })
+  test("get 400: returns 400 status code and a topic does not exist message if topic exists but no data in articles matches it", () =>{
+    return request(app).get("/api/articles?topic=hello").expect(400).then(({body})=>{
+      const {msg} = body;
+      expect(msg).toBe("bad request")
+    })
+  })
+  test("get 404: returns 404 status code and a not found message when passed a valid topic but none match it in the articles table", () =>{
+    return request(app).get("/api/articles?topic=paper").expect(404)
   })
 })
 
