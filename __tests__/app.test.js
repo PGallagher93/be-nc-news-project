@@ -373,6 +373,22 @@ describe("get 200: /api/articles query by topic", () =>{
   })
 })
 
+describe("GET 200: /api/articles sort_by query", () =>{
+  test.only("get 200: returns articles sorted by inputted query", () =>{
+    return request(app).get("/api/articles?sort_by=title").expect(200).then(({body}) =>{
+           const {articles} = body
+           expect(articles).toHaveLength(13)
+           expect(articles).toBeSortedBy("title", {descending: true})
+    })
+  })
+  test.only("get 400: returns a 400 status code and bad request message when passed a sort by query that isnt a table column", ()=>{
+    return request(app).get("/api/articles?sort_by=lol").expect(400).then(({body})=>{
+      const {msg} = body
+      expect(msg).toBe("bad request")
+    })
+  })
+})
+
 
 describe("GET 404: not an api path", () => {
   test("sends a 404 status code and err msg when the inputted api path does not exist", () => {

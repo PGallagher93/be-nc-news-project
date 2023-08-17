@@ -12,8 +12,12 @@ exports.findArticleById = (id) => {
     });
 };
 
-exports.readArticles = (topic) => {
+exports.readArticles = (sortBy = 'created_at' , topic) => {
+  const acceptedSorts = ['article_id', 'title', 'topic', 'author', 'body', 'created_at', 'votes', 'article_img_url']
   const queryValues = []
+  if(!acceptedSorts.includes(sortBy)){
+    return Promise.reject({status:400, msg:'bad request'})
+  }
   let queryString = `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments.article_id) AS comment_count FROM articles
   LEFT JOIN comments
   ON articles.article_id = comments.article_id`
@@ -24,7 +28,7 @@ exports.readArticles = (topic) => {
     queryString += ` WHERE topic = $1`
   }
   queryString += ` GROUP BY articles.article_id
-  ORDER BY articles.created_at DESC;`
+  ORDER BY articles.${sortBy} DESC;`
   
   return db
     .query(
