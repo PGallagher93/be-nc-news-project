@@ -374,17 +374,33 @@ describe("get 200: /api/articles query by topic", () =>{
 })
 
 describe("GET 200: /api/articles sort_by query", () =>{
-  test.only("get 200: returns articles sorted by inputted query", () =>{
+  test("get 200: returns articles sorted by inputted query", () =>{
     return request(app).get("/api/articles?sort_by=title").expect(200).then(({body}) =>{
            const {articles} = body
            expect(articles).toHaveLength(13)
            expect(articles).toBeSortedBy("title", {descending: true})
     })
   })
-  test.only("get 400: returns a 400 status code and bad request message when passed a sort by query that isnt a table column", ()=>{
+  test("get 400: returns a 400 status code and bad request message when passed a sort by query that isnt a table column", ()=>{
     return request(app).get("/api/articles?sort_by=lol").expect(400).then(({body})=>{
       const {msg} = body
-      expect(msg).toBe("bad request")
+      expect(msg).toBe("invalid sort query")
+    })
+  })
+})
+
+describe("GET 200: /api/articles order query", () =>{
+  test("get 200: returns articles sorted by inputted order query", () =>{
+    return request(app).get("/api/articles?order=asc").expect(200).then(({body}) =>{
+      const {articles} = body
+      expect(articles).toHaveLength(13)
+      expect(articles).toBeSortedBy('created_at')
+    })
+  })
+  test("get 400: returns a 400 status code and error message when passed a order query that isnt either asc or desc", ()=>{
+    return request(app).get("/api/articles?order=lol").expect(400).then(({body})=>{
+      const {msg} = body
+      expect(msg).toBe("invalid order query")
     })
   })
 })
