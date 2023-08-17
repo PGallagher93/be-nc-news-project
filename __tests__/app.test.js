@@ -344,9 +344,68 @@ describe("GET 200: /api/users", ()=>{
   })
 })
 
-describe.only("get 200: /api/articles query by topic", () =>{
+describe("get 200: /api/articles query by topic", () =>{
   test("get 200: returns only the articles with the topic from the query", ()=>{
-    return request(app).get("/api/articles?topic=mitch").expect(200)
+    return request(app).get("/api/articles?topic=mitch").expect(200).then(({body})=>{
+      const {articles} =body
+      expect(articles).toHaveLength(12)
+      articles.forEach((article) =>{
+        expect(article).toHaveProperty("author");
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("article_id");
+        expect(article.topic).toBe("mitch");
+        expect(article).toHaveProperty("created_at");
+        expect(article).toHaveProperty("votes");
+        expect(article).toHaveProperty("article_img_url")
+        expect(article).toHaveProperty("comment_count")
+
+      })
+    })
+  })
+  test("get 200: returns 200 status code and an empty articles array when passed a valid topic but none match it in the articles table", () =>{
+    return request(app).get("/api/articles?topic=paper").expect(200).then(({body})=>{
+      const {articles} = body 
+      expect(articles).toEqual([])
+    })
+  })
+  test("get 404: returns 404 status code and a not found message if topic could potential exist but does not currently", () =>{
+    return request(app).get("/api/articles?topic=hello").expect(404).then(({body})=>{
+      const {msg} = body;
+      expect(msg).toBe("not found")
+    })
+  })
+  
+})
+
+describe("GET 200: /api/articles sort_by query", () =>{
+  test("get 200: returns articles sorted by inputted query", () =>{
+    return request(app).get("/api/articles?sort_by=title").expect(200).then(({body}) =>{
+           const {articles} = body
+           expect(articles).toHaveLength(13)
+           expect(articles).toBeSortedBy("title", {descending: true})
+    })
+  })
+  test("get 400: returns a 400 status code and bad request message when passed a sort by query that isnt a table column", ()=>{
+    return request(app).get("/api/articles?sort_by=lol").expect(400).then(({body})=>{
+      const {msg} = body
+      expect(msg).toBe("invalid sort query")
+    })
+  })
+})
+
+describe("GET 200: /api/articles order query", () =>{
+  test("get 200: returns articles sorted by inputted order query", () =>{
+    return request(app).get("/api/articles?order=asc").expect(200).then(({body}) =>{
+      const {articles} = body
+      expect(articles).toHaveLength(13)
+      expect(articles).toBeSortedBy('created_at')
+    })
+  })
+  test("get 400: returns a 400 status code and error message when passed a order query that isnt either asc or desc", ()=>{
+    return request(app).get("/api/articles?order=lol").expect(400).then(({body})=>{
+      const {msg} = body
+      expect(msg).toBe("invalid order query")
+    })
   })
 })
 
