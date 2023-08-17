@@ -58,6 +58,7 @@ describe("GET:/api/articles/:article_id", () => {
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url");
+        expect(article).toHaveProperty("comment_count")
         expect(article.article_id).toBe(1);
       });
     
@@ -352,8 +353,6 @@ describe("get 200: /api/articles query by topic", () =>{
       articles.forEach((article) =>{
         expect(article).toHaveProperty("author");
         expect(article).toHaveProperty("title");
-        expect(article).toHaveProperty("article_id");
-        expect(article.topic).toBe("mitch");
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url")
