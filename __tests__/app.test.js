@@ -328,7 +328,7 @@ describe("PATCH 200: /api/articles/:article_id", () =>{
 })
 
 describe("GET 200: /api/users", ()=>{
-  test.only("returns an array of user objects and a status code of 200", () =>{
+  test("returns an array of user objects and a status code of 200", () =>{
     return request(app).get("/api/users").expect(200).then(({body})=>{
       const users = body
       expect(users).toHaveLength(4)
