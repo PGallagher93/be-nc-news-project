@@ -362,15 +362,19 @@ describe("get 200: /api/articles query by topic", () =>{
       })
     })
   })
-  test("get 400: returns 400 status code and a topic does not exist message if topic exists but no data in articles matches it", () =>{
-    return request(app).get("/api/articles?topic=hello").expect(400).then(({body})=>{
-      const {msg} = body;
-      expect(msg).toBe("bad request")
+  test("get 200: returns 200 status code and an empty articles array when passed a valid topic but none match it in the articles table", () =>{
+    return request(app).get("/api/articles?topic=paper").expect(200).then(({body})=>{
+      const {articles} = body 
+      expect(articles).toEqual([])
     })
   })
-  test("get 404: returns 404 status code and a not found message when passed a valid topic but none match it in the articles table", () =>{
-    return request(app).get("/api/articles?topic=paper").expect(404)
+  test("get 404: returns 404 status code and a not found message if topic could potential exist but does not currently", () =>{
+    return request(app).get("/api/articles?topic=hello").expect(404).then(({body})=>{
+      const {msg} = body;
+      expect(msg).toBe("not found")
+    })
   })
+  
 })
 
 describe("GET 200: /api/articles sort_by query", () =>{

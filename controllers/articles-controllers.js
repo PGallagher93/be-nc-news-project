@@ -30,9 +30,7 @@ exports.getAllArticles = (req, res, next) => {
   
   Promise.all(promises)
     .then((resolvedPromises) => {
-      if (!resolvedPromises[0].length) {
-        return next({ status: 404, msg: "not found" });
-      }
+      
       const articles = resolvedPromises[0];
       res.status(200).send({ articles: articles });
     })
