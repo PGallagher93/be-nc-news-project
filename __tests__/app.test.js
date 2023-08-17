@@ -47,7 +47,7 @@ describe("GET:/api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then((response) => {
-        const article = response.body;
+        const {article} = response.body;
         
 
         expect(article).toHaveProperty("author");
@@ -85,7 +85,7 @@ describe("GET:/api/articles/:article_id", () => {
 describe("GET:/api/articles/:article_id/comments", ()=>{
   test("Get 200: returns an array of comments for the given article_id",()=>{
     return request(app).get("/api/articles/3/comments").expect(200).then((response) => {
-      const comments = response.body
+      const {comments} = response.body
       
       expect(comments).toHaveLength(2)
       expect(comments).toBeSortedBy("created_at", {descending:true})
@@ -103,7 +103,8 @@ describe("GET:/api/articles/:article_id/comments", ()=>{
   } )
   test("GET 200: response with a status code 200 and an empty array if the id is valid but no comments exist for it", ()=>{
     return request(app).get("/api/articles/4/comments").expect(200).then(({body}) =>{
-      expect(body).toEqual([])
+     const {comments} = body
+      expect(comments).toEqual([])
     })
   })
   test("GET 400: returns status code 400 and bad request message if sent an invalid id input", ()=>{
@@ -129,7 +130,7 @@ describe("GET 200: /api/articles", () =>{
   test("returns the correct array of article objects with a comment count and ordered by date desc", () =>{
 
     return request(app).get("/api/articles").expect(200).then(({body}) =>{
-      const articles = body
+      const {articles} = body
       expect(articles).toHaveLength(13)
       expect(articles).toBeSortedBy("created_at", {descending:true})
       articles.forEach((article) =>{
@@ -325,6 +326,22 @@ describe("PATCH 200: /api/articles/:article_id", () =>{
     })
   })
 
+})
+
+describe("GET 200: /api/users", ()=>{
+  test("returns an array of user objects and a status code of 200", () =>{
+    return request(app).get("/api/users").expect(200).then(({body})=>{
+      const {users} = body
+      console.log(users)
+      expect(users).toHaveLength(4)
+      users.forEach((user)=>{
+
+        expect(user).toHaveProperty("username", expect.any(String));
+        expect(user).toHaveProperty("name", expect.any(String));
+        expect(user).toHaveProperty("avatar_url", expect.any(String));
+      })
+    })
+  })
 })
 
 

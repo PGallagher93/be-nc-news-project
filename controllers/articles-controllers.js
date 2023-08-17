@@ -6,13 +6,13 @@ exports.getArticleById = (req, res, next) => {
 
   findArticleById(article_id).then((article) => {
    
-    res.status(200).send(article[0]);
+    res.status(200).send({article: article[0]});
   }).catch(next)
 };
 
 exports.getAllArticles = (req, res, next) => {
   readArticles().then((articles)=>{
-   res.status(200).send(articles)
+   res.status(200).send({articles : articles})
   })
 }
 
@@ -25,7 +25,7 @@ exports.getCommentsByArticleId = (req, res, next) =>{
       
       const comments = resolvedPromises[0]
       
-      res.status(200).send(comments)
+      res.status(200).send({comments :comments})
       
     }).catch(next)
 }
