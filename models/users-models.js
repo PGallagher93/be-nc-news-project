@@ -1,9 +1,11 @@
-const db = require("../db/connection")
+const db = require("../db/connection");
 exports.readUsers = () => {
-    return db.query(
-        `SELECT * 
+  return db
+    .query(
+      `SELECT * 
         FROM users`
-    ).then(({rows})=>{
-        return rows
-    })
-}
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};

@@ -1,9 +1,9 @@
-const {readUsers} = require("../models/users-models")
+const { readUsers } = require("../models/users-models");
 
-
-
-exports.getAllUsers = (req, res, next) =>{
-    readUsers().then((users) =>{
-        res.status(200).send({users: users})
-    }).catch(next)
-}
+exports.getAllUsers = (req, res, next) => {
+  readUsers()
+    .then((users) => {
+      res.status(200).send({ users: users });
+    })
+    .catch(next);
+};

@@ -20,17 +20,15 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getAllArticles = (req, res, next) => {
   const { topic, sort_by: sortBy, order } = req.query;
-  
-  
+
   const promises = [readArticles(order, sortBy, topic)];
 
   if (topic) {
     promises.push(checkTopicExists(topic));
   }
-  
+
   Promise.all(promises)
     .then((resolvedPromises) => {
-      
       const articles = resolvedPromises[0];
       res.status(200).send({ articles: articles });
     })
