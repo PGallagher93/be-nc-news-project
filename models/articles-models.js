@@ -29,6 +29,7 @@ exports.readArticles = (order = "desc", sortBy = "created_at", topic) => {
     "created_at",
     "votes",
     "article_img_url",
+    "comment_count"
   ];
   const acceptedOrders = ["asc", "desc"];
   const queryValues = [];
