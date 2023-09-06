@@ -47,7 +47,11 @@ exports.readArticles = (order = "desc", sortBy = "created_at", topic) => {
     queryValues.push(topic);
     queryString += ` WHERE topic = $1`;
   }
-  queryString += ` GROUP BY articles.article_id
+  if(sortBy==="comment_count"){
+    queryString +=` GROUP BY articles.article_id
+    ORDER BY ${sortBy} ${order};`
+  }
+  else queryString += ` GROUP BY articles.article_id
   ORDER BY articles.${sortBy} ${order};`;
 
   return db.query(queryString, queryValues).then(({ rows }) => {
