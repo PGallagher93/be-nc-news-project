@@ -116,6 +116,22 @@
       }
     }
   },
+  "PATCH /api/comments/:comment_id":{
+    "description" : "updates the vote count of a comment",
+    "queries": [],
+    "exampleRequestBody" : {"inv_votes":"number"},
+    "exampleResponse" : {
+      "comment" : {
+        "comment_id": 1,
+        "body":"Some sort of text",
+        "article_id": 9,
+        "author":"author's name",
+        "votes" : 17,
+        "created_at":"2018-05-30T15:59:13.341Z"
+      }
+    }
+
+  },
   "GET /api/users": {
     "description": "returns an array of user objects",
     "queries": [],
