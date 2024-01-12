@@ -11,6 +11,7 @@ const { getEndpoints } = require("./controllers/api-controller");
 const { postComment } = require("./controllers/articles-controllers");
 const { deleteComment } = require("./controllers/comments-controllers");
 const { getAllUsers } = require("./controllers/users-controllers");
+const {patchComment} = require("./controllers/comments-controllers")
 const cors = require('cors')
 const app = express();
 
@@ -34,6 +35,8 @@ app.post("/api/articles/:article_id/comments", postComment);
 app.delete("/api/comments/:comment_id", deleteComment);
 
 app.patch("/api/articles/:article_id", patchVotes);
+
+app.patch("/api/comments/:comment_id", patchComment)
 
 app.use((req, res) => {
   res.status(404).send({ msg: "not found" });

@@ -66,6 +66,7 @@ exports.findCommentsByArticleId = (id) => {
       [id]
     )
     .then(({ rows }) => {
+      
       return rows;
     });
 };

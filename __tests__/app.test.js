@@ -41,7 +41,7 @@ describe("GET:/api/topics", () => {
   });
 });
 
-describe("GET:/api/articles/:article_id", () => {
+describe.only("GET:/api/articles/:article_id", () => {
   test("Get 200: returns an article object corresponding to the inputted id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -381,6 +381,90 @@ describe("PATCH 200: /api/articles/:article_id", () => {
     const inputVotes = { inc_votes: "string" };
     return request(app)
       .patch("/api/articles/1")
+      .send(inputVotes)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("bad request");
+      });
+  });
+});
+
+describe("PATCH 200: /api/comments/:comment_id", () => {
+  test("Patch 200: returns 200 status code and the updated comment when sent a positive inc vote", () => {
+    const inputVotes = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(inputVotes)
+      .expect(200)
+      .then((response) => {
+        const { comment } = response.body;
+        expect(comment[0].comment_id).toBe(1);
+        expect(comment[0].votes).toBe(17);
+        expect(comment[0]).toHaveProperty("body", expect.any(String));
+        expect(comment[0]).toHaveProperty("article_id", expect.any(Number));
+        expect(comment[0]).toHaveProperty("created_at", expect.any(String));
+        expect(comment[0]).toHaveProperty("author", expect.any(String));
+      });
+  });
+  test("Patch 200: returns 200 status code and the updated comment when sent a negative inc vote", () => {
+    const inputVotes = { inc_votes: -1 };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(inputVotes)
+      .expect(200)
+      .then((response) => {
+        const { comment } = response.body;
+        expect(comment[0].comment_id).toBe(1);
+        expect(comment[0].votes).toBe(15);
+        expect(comment[0]).toHaveProperty("body", expect.any(String));
+        expect(comment[0]).toHaveProperty("article_id", expect.any(Number));
+        expect(comment[0]).toHaveProperty("created_at", expect.any(String));
+        expect(comment[0]).toHaveProperty("author", expect.any(String));
+      });
+  });
+  test("Patch 200: returns 200 status code and the updated comment when sent a positive inc vote and an extra key", () => {
+    const inputVotes = { inc_votes: 1, helloThere: "general Kenobi" };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(inputVotes)
+      .expect(200)
+      .then((response) => {
+        const { comment } = response.body;
+        expect(comment[0].comment_id).toBe(1);
+        expect(comment[0].votes).toBe(17);
+        expect(comment[0]).toHaveProperty("body", expect.any(String));
+        expect(comment[0]).toHaveProperty("article_id", expect.any(Number));
+        expect(comment[0]).toHaveProperty("created_at", expect.any(String));
+        expect(comment[0]).toHaveProperty("author", expect.any(String));
+      });
+  });
+  test("Patch 400: returns status code 400 and bad request message when sent an invalid id type", () => {
+    const inputVotes = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/comments/notanid")
+      .send(inputVotes)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("bad request");
+      });
+  });
+  test("Patch 404: returns a 404 code when a correct id type is inputted but does not exist", () => {
+    const inputVotes = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/comments/99999999")
+      .expect(404)
+      .send(inputVotes)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("not found");
+      });
+  });
+  test("PATCH 400: returns a 400 code and a bad request message when a wrong data type is sent", () => {
+    const inputVotes = { inc_votes: "string" };
+    return request(app)
+      .patch("/api/comments/1")
       .send(inputVotes)
       .expect(400)
       .then(({ body }) => {
