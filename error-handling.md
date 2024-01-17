@@ -52,7 +52,7 @@ The following is _not_ a comprehensive list! Its purpose is just to get the ball
 
 ### POST `/api/articles/:article_id/comments`
 
-- ???
+- 
 
 ### GET `/api/articles/:article_id/comments`
 
